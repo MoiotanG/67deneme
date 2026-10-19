@@ -40,8 +40,8 @@ class MainActivity : ComponentActivity() {
     private lateinit var statusText: TextView
     private var landmarker: PoseLandmarker? = null
     private val executor = Executors.newSingleThreadExecutor()
-    private val left = WristCounter()
-    private val right = WristCounter()
+    private val leftCounter = WristCounter()
+    private val rightCounter = WristCounter()
     @Volatile private var total = 0
 
     private val permissionLauncher =
@@ -78,7 +78,7 @@ class MainActivity : ComponentActivity() {
 
         val reset = Button(this).apply {
             text = "Sıfırla"
-            setOnClickListener { total = 0; left.reset(); right.reset(); countText.text = "0" }
+            setOnClickListener { total = 0; leftCounter.reset(); rightCounter.reset(); countText.text = "0" }
         }
         root.addView(reset, FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL).apply { bottomMargin = 80 })
         setContentView(root)
@@ -137,8 +137,8 @@ class MainActivity : ComponentActivity() {
 
         val now = SystemClock.uptimeMillis()
         var gained = 0
-        if (vis(p[15]) > 0.5f && left.update(-p[15].y() / scale, now)) gained++
-        if (vis(p[16]) > 0.5f && right.update(-p[16].y() / scale, now)) gained++
+        if (vis(p[15]) > 0.5f && leftCounter.update(-p[15].y() / scale, now)) gained++
+        if (vis(p[16]) > 0.5f && rightCounter.update(-p[16].y() / scale, now)) gained++
         if (gained > 0) {
             total += gained
             runOnUiThread { countText.text = total.toString() }
